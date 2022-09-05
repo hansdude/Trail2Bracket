@@ -1,13 +1,15 @@
 epsilon=.01;
 
-barrel_d=8;
+barrel_d=6;
 barrel_r=barrel_d/2;
-barrel_h=6;
-bracket_h=2;
+barrel_h=10;
+bracket_h=4;
 margin=2;
-housing_i_r = 6;
-housing_o_r = 8; //TODO: caclulate
-screw_d=3;
+housing_margin = 3;
+housing_i_d = 6;
+housing_i_r = housing_i_d/2;
+housing_o_r = housing_i_r + housing_margin;
+screw_d=2;
 screw_r=screw_d/2;
 connector_l = barrel_r+margin+housing_o_r;
 
