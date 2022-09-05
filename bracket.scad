@@ -3,10 +3,11 @@ hole_d=6;
 hole_h=4;
 clip_h=1;
 screw_d=4;
-taper=1;
+taper=.5;
 cutout=.25;
-offset=11;
+offset=10;
 cable_d=4.5;
+shear=-0.1;
 
 thickness=2;
 width=30;
@@ -49,31 +50,56 @@ module clip() {
 		}
 	}
 }
+module simple_clip() {
+    module cutout() {
+        translate([-(hole_d+taper+epsilon)/2, 0, -epsilon/2])
+            cube(size=[hole_d+taper+epsilon, cutout, hole_h+epsilon]);
+    }
+	translate([bb_d/2, 0, 0])
+	rotate([0, -90, 0]) {
+		difference() {
+            cylinder(d1=hole_d,d2=hole_d+taper,h=hole_h);
+			translate([0, 0, -epsilon/2])
+			cylinder(d1=screw_d,d2=screw_d-taper,h=hole_h+epsilon);
+            cutout();
+			rotate([0, 0, 90]) cutout();
+		}
+	}
+}
 module knob() {
 	translate([bb_d/2, 0, 0])
 		rotate([0, -90, 0])
 		cylinder(d=hole_d,h=hole_h);
 }
+module half_tube(big_r, r, thickness, angle) {
+    rotate([0, 0, -angle/2])
+        rotate_extrude(angle=angle) {
+            translate([big_r+r, 0, 0])
+            difference() {
+                circle(r=r+thickness);
+                circle(r=r);
+                translate([0, -big_r+epsilon, 0])
+                    square(size=2*big_r+epsilon);
+            }
+        }
+}
 module connector() {
-	module tube(big_r, r, angle) {
-		rotate([0, 0, -angle/2])
-			rotate_extrude(angle=angle) {
-				translate([big_r+r, 0, 0])
-					circle(r=r);
-			}
-	}
 	angle=2*asin(height/bb_d);
+	multmatrix(m =
+		[ [1,     0, 0, 0],
+		  [0,     1, 0, 0],
+		  [0, shear, 1, 0],
+		  [0,     0, 0, 1] ])
 	translate([0, 0, offset])
-		difference() {
-			tube(big_r=bb_d/2, r=cable_d/2+thickness, angle=angle);
-			tube(big_r=bb_d/2+thickness, r=cable_d/2, angle=angle+epsilon);
-		}
+        half_tube(big_r=bb_d/2+thickness, r=cable_d/2, thickness=thickness, angle=angle);
 }
 module bracket() {
 	body();
-	clip();
+	simple_clip();
 	connector();
 }
 
 $fn=100;
+$fa=100;
+$fs=100;
 bracket();
