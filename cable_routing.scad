@@ -20,16 +20,16 @@ module epsilon_z() {
 module bracket() {
 	difference() {
 		union() {
-			cylinder(r=barrel_r, h=barrel_h);
-			translate([-barrel_r, 0, barrel_h-bracket_h])
+			cylinder(r=barrel_r, h=barrel_h+bracket_h);
+			translate([-barrel_r, 0, barrel_h])
 				cube(size=[2*barrel_r, connector_l, bracket_h]);
-			translate([0, connector_l, barrel_h-bracket_h]) {
+			translate([0, connector_l, barrel_h]) {
 				difference() {
 					cylinder(r=housing_o_r, h=bracket_h);
 				}
 			}
 		}
-		translate([0, connector_l, barrel_h-bracket_h]) {
+		translate([0, connector_l, barrel_h]) {
 			epsilon_z() cylinder(r=housing_i_r, h=bracket_h+epsilon);
 		}
 		epsilon_z() {
