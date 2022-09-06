@@ -71,27 +71,32 @@ module knob() {
 		rotate([0, -90, 0])
 		cylinder(d=hole_d,h=hole_h);
 }
-module half_tube(big_r, r, thickness, angle) {
+module tube(big_r, r, thickness, angle) {
     rotate([0, 0, -angle/2])
         rotate_extrude(angle=angle) {
             translate([big_r+r, 0, 0])
             difference() {
                 circle(r=r+thickness);
                 circle(r=r);
-                translate([0, -big_r+epsilon, 0])
-                    square(size=2*big_r+epsilon);
             }
         }
 }
 module connector() {
 	angle=2*asin(height/bb_d);
+	thickness_angle=5;
+	module this_tube() {
+		tube(big_r=bb_d/2+thickness, r=cable_d/2, thickness=thickness, angle=thickness_angle);
+	}
 	multmatrix(m =
 		[ [1,     0, 0, 0],
 		  [0,     1, 0, 0],
 		  [0, shear, 1, 0],
 		  [0,     0, 0, 1] ])
-	translate([0, 0, offset])
-        half_tube(big_r=bb_d/2+thickness, r=cable_d/2, thickness=thickness, angle=angle);
+	translate([0, 0, offset]) {
+		rotate([0, 0, -(angle-3*thickness_angle)/2]) this_tube();
+		this_tube();
+		rotate([0, 0, (angle-3*thickness_angle)/2]) this_tube();
+	}
 }
 module bracket() {
 	body();
