@@ -83,19 +83,13 @@ module tube(big_r, r, thickness, angle) {
 }
 module connector() {
 	angle=2*asin(height/bb_d);
-	thickness_angle=5;
-	module this_tube() {
-		tube(big_r=bb_d/2+thickness, r=cable_d/2, thickness=thickness, angle=thickness_angle);
-	}
 	multmatrix(m =
 		[ [1,     0, 0, 0],
 		  [0,     1, 0, 0],
 		  [0, shear, 1, 0],
 		  [0,     0, 0, 1] ])
 	translate([0, 0, offset]) {
-		rotate([0, 0, -(angle-3*thickness_angle)/2]) this_tube();
-		this_tube();
-		rotate([0, 0, (angle-3*thickness_angle)/2]) this_tube();
+		tube(big_r=bb_d/2+thickness, r=cable_d/2, thickness=thickness, angle=angle);
 	}
 }
 module bracket() {
