@@ -6,7 +6,7 @@ screw_d=4;
 taper=.5;
 cutout=.25;
 offset=10;
-cable_d=4.5;
+cable_d=5;
 shear=-0.1;
 
 thickness=2;
